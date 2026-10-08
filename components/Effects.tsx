@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 
 const CARD = ".pcard, .post, .feature-card";
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/+";
 
 /** Global delegated interaction effects: card tilt + spotlight, text scramble, click ripples. */
 export default function Effects() {
@@ -34,30 +33,7 @@ export default function Effects() {
       card.classList.add("is-hot");
     };
 
-    const running = new WeakSet<HTMLElement>();
-    const over = (e: PointerEvent) => {
-      if (reduce) return;
-      const t = e.target as HTMLElement;
-      const host = t.closest<HTMLElement>("[data-scramble], a, button");
-      if (!host) return;
-      const el = host.matches("[data-scramble]") ? host : host.querySelector<HTMLElement>("[data-scramble]");
-      if (!el || running.has(el)) return;
-      const orig = el.dataset.orig ?? (el.dataset.orig = el.textContent || "");
-      running.add(el);
-      let n = 0;
-      const id = setInterval(() => {
-        n += 0.6;
-        el.textContent = orig
-          .split("")
-          .map((c, i) => (c === " " || i < n ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
-          .join("");
-        if (n >= orig.length) {
-          clearInterval(id);
-          el.textContent = orig;
-          running.delete(el);
-        }
-      }, 28);
-    };
+
 
     const down = (e: PointerEvent) => {
       if (reduce) return;
@@ -70,11 +46,9 @@ export default function Effects() {
     };
 
     document.addEventListener("pointermove", move);
-    document.addEventListener("pointerover", over);
     document.addEventListener("pointerdown", down);
     return () => {
       document.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerover", over);
       document.removeEventListener("pointerdown", down);
     };
   }, []);

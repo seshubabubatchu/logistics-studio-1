@@ -42,36 +42,7 @@ function Preloader({ onDone }: { onDone: () => void }) {
   );
 }
 
-function Cursor() {
-  const el = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (window.matchMedia("(hover: none)").matches) return;
-    let x = 0,
-      y = 0,
-      cx = 0,
-      cy = 0,
-      raf = 0;
-    const move = (e: PointerEvent) => {
-      x = e.clientX;
-      y = e.clientY;
-      const t = e.target as HTMLElement;
-      el.current?.classList.toggle("hover", !!t.closest("a, button, .pcard, .post, .feature-card"));
-    };
-    const loop = () => {
-      cx += (x - cx) * 0.2;
-      cy += (y - cy) * 0.2;
-      if (el.current) el.current.style.transform = `translate3d(${cx}px,${cy}px,0)`;
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener("pointermove", move);
-    loop();
-    return () => {
-      window.removeEventListener("pointermove", move);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-  return <div ref={el} className="cursor" aria-hidden />;
-}
+// Old cursor removed
 
 export default function Shell({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -119,7 +90,6 @@ export default function Shell({ children }: { children: ReactNode }) {
           />
         )}
       </AnimatePresence>
-      <Cursor />
       <Effects />
       <motion.div className="progress" style={{ scaleX: prog }} />
       <Navbar />

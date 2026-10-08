@@ -53,7 +53,7 @@ export default function Dust({ hue = "#5B8CFF" }: { hue?: string }) {
           if (d.x < -10) d.x = w + 10;
           if (d.x > w + 10) d.x = -10;
         }
-        ctx.fillStyle = "rgba(220,230,255,.55)";
+        ctx.fillStyle = "rgba(0, 44, 160, 0.4)";
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, 7);
         ctx.fill();

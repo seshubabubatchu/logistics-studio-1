@@ -18,7 +18,7 @@ export default function ParticleText({
   radius = 130,
   weight = 600,
   density = 42,
-  hot = "#C6FF3D",
+  hot = "#f2652f",
 }: {
   lines: string[];
   colors: string[];

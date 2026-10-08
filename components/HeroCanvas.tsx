@@ -61,7 +61,7 @@ export default function HeroCanvas() {
       ctx.clearRect(0, 0, w, h);
 
       // soft grid
-      ctx.strokeStyle = "rgba(150,180,255,0.045)";
+      ctx.strokeStyle = "rgba(0, 44, 160, 0.08)";
       ctx.lineWidth = 1;
       const g = 80;
       const ox = (mouse.x * 14) % g,
@@ -89,7 +89,7 @@ export default function HeroCanvas() {
       for (const [a, b] of edges) {
         const p = pos(nodes[a]),
           q = pos(nodes[b]);
-        ctx.strokeStyle = "rgba(120,160,255,0.16)";
+        ctx.strokeStyle = "rgba(0, 44, 160, 0.15)";
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
@@ -97,7 +97,7 @@ export default function HeroCanvas() {
       }
       for (const n of nodes) {
         const p = pos(n);
-        ctx.fillStyle = `rgba(190,210,255,${0.25 + n.z * 0.4})`;
+        ctx.fillStyle = `rgba(0, 44, 160, ${0.15 + n.z * 0.4})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.4 + n.z * 1.4, 0, 7);
         ctx.fill();
@@ -114,13 +114,13 @@ export default function HeroCanvas() {
         const x = p.x + (q.x - p.x) * k.t,
           y = p.y + (q.y - p.y) * k.t;
         const grd = ctx.createRadialGradient(x, y, 0, x, y, 14);
-        grd.addColorStop(0, "rgba(198,255,61,0.9)");
-        grd.addColorStop(1, "rgba(198,255,61,0)");
+        grd.addColorStop(0, "rgba(237,173,79,0.9)");
+        grd.addColorStop(1, "rgba(237,173,79,0)");
         ctx.fillStyle = grd;
         ctx.beginPath();
         ctx.arc(x, y, 14, 0, 7);
         ctx.fill();
-        ctx.fillStyle = "#c6ff3d";
+        ctx.fillStyle = "#edad4f";
         ctx.beginPath();
         ctx.arc(x, y, 2.2, 0, 7);
         ctx.fill();

@@ -192,12 +192,12 @@ export function Marquee({ items }: { items: string[] }) {
     <div className="marquee" aria-hidden>
       <motion.div style={{ skewX }}>
         <div className="marquee-track">
-        {row.map((t, i) => (
-          <span key={i}>{t}</span>
-        ))}
-        {row.map((t, i) => (
-          <span key={"b" + i}>{t}</span>
-        ))}
+          {row.map((t, i) => (
+            <span key={i}>{t}</span>
+          ))}
+          {row.map((t, i) => (
+            <span key={"b" + i}>{t}</span>
+          ))}
         </div>
       </motion.div>
     </div>

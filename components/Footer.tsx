@@ -9,7 +9,7 @@ import { Logo } from "./Navbar";
 import ParticleText from "./ParticleText";
 
 const WM = ["Logistics Studio"];
-const WM_COLORS = ["rgba(234,240,255,0.5)"];
+const WM_COLORS = ["rgba(255, 255, 255, 0.1)"];
 
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
@@ -23,7 +23,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <Logo />
-            <p style={{ color: "var(--muted)", marginTop: 20, maxWidth: 34 + "ch" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.7)", marginTop: 20, maxWidth: 34 + "ch" }}>
               Digital strategy and technology solutions for transportation &amp; logistics.
             </p>
             <h4 style={{ marginTop: 36 }}>Let&apos;s stay in touch</h4>
@@ -79,7 +79,7 @@ export default function Footer() {
               <li>
                 <a href={`mailto:${contact.email}`}>{contact.email}</a>
               </li>
-              <li style={{ color: "var(--muted)", marginTop: 20 }}>
+              <li style={{ color: "rgba(255, 255, 255, 0.7)", marginTop: 20 }}>
                 {contact.address.map((l) => (
                   <div key={l}>{l}</div>
                 ))}

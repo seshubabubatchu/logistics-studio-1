@@ -10,15 +10,11 @@ import { Button } from "./ui";
 export function Logo() {
   return (
     <Link href="/" className="logo" aria-label="Logistics Studio home">
-      <svg viewBox="0 0 40 40" fill="none">
-        <rect x="1" y="1" width="38" height="38" rx="11" stroke="rgba(190,210,255,.3)" />
-        <path d="M11 11v18h10" stroke="#C6FF3D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M21 29l8-8M29 29V21h-8" stroke="#EAF0FF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <span>
+      <img src="/logo.png" alt="Logistics Studio Logo" style={{ height: "40px", width: "auto" }} />
+      {/* <span>
         Logistics Studio
         <small>Supply chain tech</small>
-      </span>
+      </span> */}
     </Link>
   );
 }

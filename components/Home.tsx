@@ -7,10 +7,9 @@ import { ArrowRight, ArrowUpRight, Compass, Code2, Workflow, Users } from "lucid
 import { pillars, posts, services } from "@/lib/data";
 import HeroCanvas from "./HeroCanvas";
 import { Button, CTA, Marquee, ParallaxBand, Reveal, ScrollWords, SplitHeading, useMedia } from "./ui";
-import ParticleText from "./ParticleText";
 
 const HERO_LINES = ["Innovate.", "Automate.", "Predict."];
-const HERO_COLORS = ["#EAF0FF", "#5B8CFF", "#C6FF3D"];
+const HERO_COLORS = ["#081c54", "#1368f6", "#f2652f"];
 
 function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -29,9 +28,18 @@ function Hero() {
       </motion.div>
       <motion.div className="container" style={{ y, opacity: o }}>
         <div className="eyebrow">Technology for transportation &amp; logistics</div>
-        <h1 style={{ marginTop: 28 }}>
-          <span className="sr-only">Innovate, Automate and Predict</span>
-          <ParticleText lines={HERO_LINES} colors={HERO_COLORS} delay={delay} />
+        <h1 style={{ marginTop: 28 }} className="h-xl">
+          {HERO_LINES.map((line, i) => (
+            <motion.span
+              key={i}
+              style={{ color: HERO_COLORS[i], display: "block" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (delay / 1000) + i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {line}
+            </motion.span>
+          ))}
         </h1>
         <div className="hero-meta">
           <motion.p

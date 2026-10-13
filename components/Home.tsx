@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Compass, Code2, Workflow, Users } from "lucide-react";
@@ -18,9 +18,13 @@ function Hero() {
   const cy = useTransform(scrollYProgress, [0, 1], [0, 90]);
   const o = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const [delay] = useState(() =>
-    typeof window !== "undefined" && sessionStorage.getItem("ls-loaded") ? 150 : 2100,
-  );
+  const [delay, setDelay] = useState(2100);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("ls-loaded")) {
+      setDelay(150);
+    }
+  }, []);
   return (
     <section ref={ref} className="hero">
       <motion.div style={{ y: cy, scale, position: "absolute", inset: 0 }}>

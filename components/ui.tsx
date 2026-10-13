@@ -41,7 +41,7 @@ export function useMedia(q: string, initial = false) {
 export function Reveal({
   children,
   delay = 0,
-  y = 40,
+  y = 30,
   className,
 }: {
   children: ReactNode;
@@ -54,8 +54,8 @@ export function Reveal({
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 1, delay, ease: EASE }}
+      viewport={{ once: true, margin: "0px" }}
+      transition={{ duration: 0.6, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -77,7 +77,7 @@ export function SplitHeading({
   immediate?: boolean;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "0px" });
   const show = immediate || inView;
   const words = text.split(" ");
   return (
@@ -87,7 +87,7 @@ export function SplitHeading({
           <motion.span
             initial={{ y: "110%" }}
             animate={show ? { y: 0 } : {}}
-            transition={{ duration: 1.1, delay: delay + i * 0.06, ease: EASE }}
+            transition={{ duration: 0.65, delay: delay + i * 0.03, ease: EASE }}
           >
             {w}
             {i < words.length - 1 ? "\u00A0" : ""}
@@ -278,11 +278,16 @@ export function PageHero({
           <span>/</span>
           <span style={{ color: "var(--text)" }}>{kicker}</span>
         </div>
-        <SplitHeading as="h1" text={title} className="h-xl" immediate delay={0.2} />
+        <SplitHeading as="h1" text={title} className="h-xl" immediate delay={0.05} />
         {text && (
-          <Reveal delay={0.5}>
-            <p className="lead">{text}</p>
-          </Reveal>
+          <motion.p
+            className="lead"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: EASE }}
+          >
+            {text}
+          </motion.p>
         )}
       </motion.div>
     </header>

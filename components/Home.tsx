@@ -18,13 +18,6 @@ function Hero() {
   const cy = useTransform(scrollYProgress, [0, 1], [0, 90]);
   const o = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const [delay, setDelay] = useState(2100);
-
-  useEffect(() => {
-    if (sessionStorage.getItem("ls-loaded")) {
-      setDelay(150);
-    }
-  }, []);
 
   return (
     <section ref={ref} className="hero">
@@ -38,9 +31,9 @@ function Hero() {
             <motion.span
               key={i}
               style={{ color: HERO_COLORS[i], display: "block" }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: (delay / 1000) + i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.05 + i * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
               {line}
             </motion.span>
@@ -49,17 +42,17 @@ function Hero() {
         <div className="hero-meta">
           <motion.p
             className="hero-sub"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.0, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.25, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             We build supply chain software, data science and integrations, from ERP to last-mile delivery, with the industry expertise logistics leaders can count on.
           </motion.p>
           <motion.div
             className="hero-actions"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Button href="/contact">Get started</Button>
             <Button href="/services" ghost>

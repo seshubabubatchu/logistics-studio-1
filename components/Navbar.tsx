@@ -8,13 +8,10 @@ import { services } from "@/lib/data";
 import { Button } from "./ui";
 
 export function Logo() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
   return (
     <Link href="/" className="logo" aria-label="Logistics Studio home">
-      <img src="/logo.png" alt="Logistics Studio Logo" style={{ height: "40px", width: "auto" }} />
-      {/* <span>
-        Logistics Studio
-        <small>Supply chain tech</small>
-      </span> */}
+      <img src={`${basePath}/logo.png`} alt="Logistics Studio Logo" style={{ height: "40px", width: "auto" }} />
     </Link>
   );
 }

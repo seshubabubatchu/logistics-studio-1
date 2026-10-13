@@ -380,11 +380,14 @@ h4 {
 
 .menu-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: clamp(32px, 5vw, 64px);
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(36px, 5vw, 64px);
   align-items: stretch;
   flex: 1;
   min-height: 0;
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .menu-main {
@@ -423,8 +426,8 @@ h4 {
 }
 
 .menu-side {
-  width: 380px;
-  max-width: 380px;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -524,41 +527,50 @@ h4 {
   color: var(--brand-orange);
 }
 
-/* ───────── Desktop Flyout Overlay (Absolute, Out of Flow) ───────── */
-.desktop-edi-flyout {
+/* ───────── Desktop EDI Popup (Anchored Overlay Near Parent) ───────── */
+.desktop-edi-popup {
   position: absolute;
-  top: 0;
-  width: 540px;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 100%;
+  min-width: min(560px, calc(100vw - 80px));
   background: var(--bg-card, #ffffff);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px 20px;
-  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(8, 28, 84, 0.12);
+  border-radius: 16px;
+  padding: 18px 20px 16px;
+  box-shadow: 0 20px 48px -12px rgba(8, 28, 84, 0.16), 0 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 100;
   pointer-events: auto;
+  overflow: hidden;
+  box-sizing: border-box;
   will-change: transform, opacity;
 }
 
-/* Transparent Hover Bridge */
-.desktop-edi-flyout::before {
+/* Upward pointer arrow indicator pointing to parent EDI Services row */
+.desktop-edi-popup::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 28px;
+  width: 12px;
+  height: 12px;
+  background: var(--bg-card, #ffffff);
+  border-left: 1px solid rgba(8, 28, 84, 0.12);
+  border-top: 1px solid rgba(8, 28, 84, 0.12);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+
+/* Transparent Hover Bridge so mouse movement to popup never loses hover */
+.desktop-edi-popup::before {
   content: "";
   position: absolute;
   top: -12px;
-  bottom: -12px;
-  left: -24px;
-  right: -24px;
+  left: 0;
+  right: 0;
+  height: 14px;
   pointer-events: auto;
-  z-index: -1;
-}
-
-.desktop-edi-flyout.side-left {
-  right: calc(100% + 18px);
-  left: auto;
-}
-
-.desktop-edi-flyout.side-right {
-  left: calc(100% + 18px);
-  right: auto;
+  z-index: 0;
 }
 
 .flyout-header {
@@ -568,6 +580,8 @@ h4 {
   padding-bottom: 10px;
   margin-bottom: 12px;
   border-bottom: 1px solid var(--line);
+  position: relative;
+  z-index: 2;
 }
 
 .flyout-badge {
@@ -593,20 +607,28 @@ h4 {
 
 .flyout-columns {
   display: grid;
-  grid-template-columns: 1fr 1.08fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
 .flyout-col {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .flyout-group {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .flyout-phase-label {
@@ -623,20 +645,27 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  width: 100%;
 }
 
 .flyout-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 8px;
-  height: 34px;
+  padding: 5px 8px;
+  height: 32px;
   border-radius: 6px;
   font-size: 0.82rem;
   color: var(--fg);
   text-decoration: none;
   transition: background 0.12s ease, color 0.12s ease;
   white-space: nowrap;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .flyout-item:hover,
@@ -664,9 +693,16 @@ h4 {
 }
 
 .flyout-item .item-title {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Mobile Accordion */
+.mobile-edi-accordion {
+  display: none;
 }
 
 .menu-foot {
@@ -678,6 +714,9 @@ h4 {
   font-size: 0.9rem;
   padding-top: 10px;
   border-top: 1px solid var(--line);
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 @media (max-width: 960px) {
@@ -687,6 +726,56 @@ h4 {
 
   .menu-grid {
     grid-template-columns: 1fr;
+  }
+
+  .desktop-edi-popup {
+    display: none !important;
+  }
+
+  .mobile-edi-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-phase-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--brand-orange);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .mobile-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .mobile-item .item-num {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
   }
 }
 

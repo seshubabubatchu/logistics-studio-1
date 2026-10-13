@@ -23,7 +23,7 @@ const links = [
   { href: "/resources", label: "Resources" },
 ];
 
-const EDI_LEFT_GROUPS = [
+const EDI_COL1_GROUPS = [
   {
     phase: "PLAN",
     items: [{ num: "01", title: "EDI Strategy & Assessment", anchor: "strategy-assessment" }],
@@ -36,15 +36,16 @@ const EDI_LEFT_GROUPS = [
       { num: "05", title: "Communication & Connectivity", anchor: "connectivity" },
     ],
   },
-];
-
-const EDI_RIGHT_GROUPS = [
   {
     phase: "PROVE",
-    items: [
-      { num: "03", title: "EDI Mapping & Translation", anchor: "mapping" },
-      { num: "06", title: "Testing, Certification & Compliance", anchor: "testing-compliance" },
-    ],
+    items: [{ num: "03", title: "EDI Mapping & Translation", anchor: "mapping" }],
+  },
+];
+
+const EDI_COL2_GROUPS = [
+  {
+    phase: "PROVE",
+    items: [{ num: "06", title: "Testing, Certification & Compliance", anchor: "testing-compliance" }],
   },
   {
     phase: "RUN",
@@ -66,18 +67,17 @@ const EDI_RIGHT_GROUPS = [
   },
 ];
 
-const ALL_EDI_GROUPS = [...EDI_LEFT_GROUPS, ...EDI_RIGHT_GROUPS];
+const ALL_EDI_GROUPS = [...EDI_COL1_GROUPS, ...EDI_COL2_GROUPS];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [ediSubOpen, setEdiSubOpen] = useState(false);
-  const [flyoutSide, setFlyoutSide] = useState<"left" | "right">("left");
 
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const ediWrapperRef = useRef<HTMLDivElement>(null);
-  const flyoutRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const { scrollY } = useScroll();
@@ -104,23 +104,11 @@ export default function Navbar() {
     };
   }, [open]);
 
-  // Viewport position check: flip flyout left or right
-  const updateFlyoutPosition = () => {
-    if (typeof window === "undefined" || !ediWrapperRef.current) return;
-    const rect = ediWrapperRef.current.getBoundingClientRect();
-    if (window.innerWidth - rect.right >= 560) {
-      setFlyoutSide("right");
-    } else {
-      setFlyoutSide("left");
-    }
-  };
-
   const handleEdiMouseEnter = () => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
-    updateFlyoutPosition();
     setEdiSubOpen(true);
   };
 
@@ -146,7 +134,6 @@ export default function Navbar() {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
-    updateFlyoutPosition();
     setEdiSubOpen(true);
   };
 
@@ -156,8 +143,8 @@ export default function Navbar() {
     }
   };
 
-  // Keyboard navigation inside the flyout panel
-  const handleFlyoutKeyDown = (e: React.KeyboardEvent) => {
+  // Keyboard navigation inside the popup panel
+  const handlePopupKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setEdiSubOpen(false);
       ediWrapperRef.current?.querySelector("button")?.focus();
@@ -165,7 +152,7 @@ export default function Navbar() {
     }
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
-      const focusable = flyoutRef.current?.querySelectorAll<HTMLAnchorElement>("a");
+      const focusable = popupRef.current?.querySelectorAll<HTMLAnchorElement>("a");
       if (!focusable || focusable.length === 0) return;
       const list = Array.from(focusable);
       const currentIndex = list.indexOf(document.activeElement as HTMLAnchorElement);
@@ -243,9 +230,9 @@ export default function Navbar() {
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
             data-lenis-prevent
           >
-            {/* Always exactly 2 columns: left big links | right "WHAT WE DO" */}
+            {/* Exactly 2 columns with natural cohesive spacing like before */}
             <div className="menu-grid">
-              {/* Left Column: Big Nav Links (never wraps, 5 items fit exactly in 100dvh) */}
+              {/* Left Column: Big Nav Links (never wraps, 5 items fit comfortably in 100dvh) */}
               <div className="menu-main">
                 {[
                   ["/", "Home"],
@@ -268,11 +255,11 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Right Column: Fixed Width "WHAT WE DO" */}
+              {/* Right Column: "WHAT WE DO" */}
               <motion.div className="menu-side" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
                 <h4>What we do</h4>
                 <div className="menu-services-list">
-                  {/* EDI Services Wrapper (row + absolute overlay flyout in one wrapper) */}
+                  {/* EDI Services Wrapper (row + popup near parent) */}
                   <div
                     ref={ediWrapperRef}
                     className="edi-menu-wrapper"
@@ -295,7 +282,6 @@ export default function Navbar() {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          updateFlyoutPosition();
                           setEdiSubOpen(!ediSubOpen);
                         }}
                         aria-expanded={ediSubOpen}
@@ -315,33 +301,33 @@ export default function Navbar() {
                       </button>
                     </div>
 
-                    {/* Desktop Flyout Overlay (Absolute, out of document flow, overlays without pushing) */}
+                    {/* Desktop Popup Near Parent (anchored directly under EDI Services row) */}
                     <AnimatePresence>
                       {ediSubOpen && (
                         <motion.div
-                          ref={flyoutRef}
+                          ref={popupRef}
                           id="edi-subpanel-content"
-                          className={`desktop-edi-flyout side-${flyoutSide}`}
+                          className="desktop-edi-popup"
                           initial={{
                             opacity: 0,
-                            x: flyoutSide === "left" ? 8 : -8,
+                            y: -8,
                             scale: 0.98,
                           }}
                           animate={{
                             opacity: 1,
-                            x: 0,
+                            y: 0,
                             scale: 1,
                           }}
                           exit={{
                             opacity: 0,
-                            x: flyoutSide === "left" ? 6 : -6,
+                            y: -6,
                             scale: 0.98,
                           }}
                           transition={{
-                            duration: 0.2,
+                            duration: 0.18,
                             ease: [0.16, 1, 0.3, 1],
                           }}
-                          onKeyDown={handleFlyoutKeyDown}
+                          onKeyDown={handlePopupKeyDown}
                           role="region"
                           aria-label="EDI Sub-Areas (01–10)"
                         >
@@ -353,11 +339,11 @@ export default function Navbar() {
                             </Link>
                           </div>
 
-                          {/* 2-Column Compact Grid */}
+                          {/* 2-Column Balanced Grid */}
                           <div className="flyout-columns">
-                            {/* Left Column: PLAN + CONNECT */}
+                            {/* Column 1: PLAN + CONNECT + PROVE (01–05) */}
                             <div className="flyout-col">
-                              {EDI_LEFT_GROUPS.map((grp) => (
+                              {EDI_COL1_GROUPS.map((grp) => (
                                 <div key={grp.phase} className="flyout-group">
                                   <div className="flyout-phase-label">{grp.phase}</div>
                                   <div className="flyout-items">
@@ -367,6 +353,7 @@ export default function Navbar() {
                                         href={`/edi-services#${it.anchor}`}
                                         onClick={closeMenu}
                                         className="flyout-item"
+                                        title={it.title}
                                       >
                                         <span className="item-num">{it.num}</span>
                                         <span className="item-title">{it.title}</span>
@@ -377,9 +364,9 @@ export default function Navbar() {
                               ))}
                             </div>
 
-                            {/* Right Column: PROVE + RUN + EVOLVE + PLATFORMS & STANDARDS */}
+                            {/* Column 2: PROVE + RUN + EVOLVE + PLATFORMS & STANDARDS (06–10) */}
                             <div className="flyout-col">
-                              {EDI_RIGHT_GROUPS.map((grp) => (
+                              {EDI_COL2_GROUPS.map((grp) => (
                                 <div key={grp.phase} className="flyout-group">
                                   <div className="flyout-phase-label">{grp.phase}</div>
                                   <div className="flyout-items">
@@ -389,6 +376,7 @@ export default function Navbar() {
                                         href={`/edi-services#${it.anchor}`}
                                         onClick={closeMenu}
                                         className="flyout-item"
+                                        title={it.title}
                                       >
                                         <span className="item-num">{it.num}</span>
                                         <span className="item-title">{it.title}</span>
@@ -428,7 +416,7 @@ export default function Navbar() {
                     )}
                   </div>
 
-                  {/* The other 5 service rows (hovering any of them closes the EDI panel immediately) */}
+                  {/* The other 5 service rows (hovering any of them closes the EDI popup immediately) */}
                   {otherServices.map((s) => (
                     <div
                       key={s.slug}

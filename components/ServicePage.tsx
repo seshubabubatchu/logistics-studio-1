@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { services, type Service } from "@/lib/data";
+import { ArrowUpRight, CheckCircle2, Sparkles, Wrench } from "lucide-react";
+import { services, type ServiceItem } from "@/data/services";
 import { CTA, PageHero, Reveal, SplitHeading } from "./ui";
 
 export function Visual({ hue, label }: { hue: string; label: string }) {
@@ -39,77 +39,214 @@ export function Visual({ hue, label }: { hue: string; label: string }) {
   );
 }
 
-export default function ServicePage({ s }: { s: Service }) {
+export default function ServicePage({ s }: { s: ServiceItem }) {
   const next = services[(services.findIndex((x) => x.slug === s.slug) + 1) % services.length];
+
   return (
     <>
       <PageHero kicker={s.kicker} title={s.headline} text={s.intro} hue={s.hue} />
 
+      {/* Best fit banner & capabilities */}
       <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container split">
-          <Visual hue={s.hue} label={`${s.index} — ${s.kicker}`} />
-          <div>
-            <div className="eyebrow">Capabilities</div>
-            <SplitHeading text="What's inside" className="h-md" />
-            <Reveal delay={0.1}>
-              <div className="chips" style={{ marginTop: 32 }}>
-                {s.list.map((c) => (
-                  <span key={c} className="chip">
+        <div className="container">
+          <div
+            style={{
+              padding: "20px 28px",
+              background: "var(--bg-2)",
+              border: "1px solid var(--line)",
+              borderRadius: 14,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 16,
+              marginBottom: 48,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.1em",
+                  color: "var(--brand-orange)",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+                }}
+              >
+                Best fit
+              </span>
+              <span style={{ fontSize: "1rem", color: "var(--fg)", fontWeight: 500 }}>
+                {s.bestFit}
+              </span>
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--mono)",
+                fontSize: "0.78rem",
+                color: "var(--muted)",
+              }}
+            >
+              {s.index} / 06
+            </span>
+          </div>
+
+          <div className="split" style={{ alignItems: "start" }}>
+            <Visual hue={s.hue} label={`${s.index} — ${s.kicker}`} />
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              {/* Block 1: What it is */}
+              <div
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
+                  borderLeft: `4px solid ${s.hue}`,
+                  borderRadius: 12,
+                  padding: "24px 28px",
+                }}
+              >
+                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", color: s.hue, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600, marginBottom: 8 }}>
+                  What it is
+                </div>
+                <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6, color: "var(--fg)" }}>
+                  {s.intro}
+                </p>
+              </div>
+
+              {/* Block 2: Who it's for */}
+              <div
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
+                  borderLeft: "4px solid var(--brand-orange)",
+                  borderRadius: 12,
+                  padding: "24px 28px",
+                }}
+              >
+                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", color: "var(--brand-orange)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600, marginBottom: 8 }}>
+                  Who it&apos;s for
+                </div>
+                <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6, color: "var(--fg)" }}>
+                  {s.whoItsFor}
+                </p>
+              </div>
+
+              {/* Block 3: How we deliver it */}
+              <div
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
+                  borderLeft: "4px solid var(--brand-blue)",
+                  borderRadius: 12,
+                  padding: "24px 28px",
+                }}
+              >
+                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", color: "var(--brand-blue)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600, marginBottom: 8 }}>
+                  How we deliver it
+                </div>
+                <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6, color: "var(--fg)" }}>
+                  {s.howWeDeliver}
+                </p>
+
+                {/* Tool tags like IBM watsonx / Python / Spring */}
+                {s.tools && (
+                  <div style={{ marginTop: 18, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                    <span style={{ fontSize: "0.8rem", color: "var(--muted)", marginRight: 4 }}>Technologies:</span>
+                    {s.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        style={{
+                          fontFamily: "var(--mono)",
+                          fontSize: "0.78rem",
+                          fontWeight: tool.includes("watsonx") ? 700 : 500,
+                          padding: "4px 10px",
+                          background: tool.includes("watsonx") ? "rgba(178, 140, 255, 0.15)" : "var(--bg-2)",
+                          color: tool.includes("watsonx") ? "#9333ea" : "var(--fg)",
+                          borderRadius: 6,
+                          border: tool.includes("watsonx") ? "1px solid rgba(178, 140, 255, 0.4)" : "1px solid var(--line)",
+                        }}
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Block 4: Why it matters */}
+              <div
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
+                  borderLeft: "4px solid #3DE0C5",
+                  borderRadius: 12,
+                  padding: "24px 28px",
+                }}
+              >
+                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", color: "#059669", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600, marginBottom: 8 }}>
+                  Why it matters
+                </div>
+                <p style={{ margin: 0, fontSize: "1.05rem", lineHeight: 1.6, color: "var(--fg)" }}>
+                  {s.whyItMatters}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities tags */}
+      {s.capabilities && (
+        <section className="section" style={{ background: "var(--bg-2)", padding: "48px 0" }}>
+          <div className="container">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+              <div>
+                <div className="eyebrow">Expertise</div>
+                <h3 className="h-md" style={{ margin: "6px 0 0" }}>Core capabilities</h3>
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", maxWidth: "600px" }}>
+                {s.capabilities.map((c) => (
+                  <span
+                    key={c}
+                    style={{
+                      padding: "8px 16px",
+                      background: "var(--bg-card)",
+                      border: "1px solid var(--line)",
+                      borderRadius: 8,
+                      fontSize: "0.88rem",
+                      fontWeight: 500,
+                    }}
+                  >
                     {c}
                   </span>
                 ))}
               </div>
-            </Reveal>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="section" style={{ background: "var(--bg-2)" }}>
-        <div className="container">
-          <div className="eyebrow">How it works</div>
-          <SplitHeading text={`The ${s.kicker} approach`} className="h-lg" />
-          <div className="grid-3" style={{ marginTop: 56, gridTemplateColumns: undefined }}>
-            {s.points.map((p, i) => (
-              <Reveal key={p.t} delay={i * 0.08}>
-                <div className="feature-card" style={{ ["--hue" as string]: s.hue }}>
-                  <span className="fi">0{i + 1}</span>
-                  <h3>{p.t}</h3>
-                  <p>{p.d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CTA
+        title="Ready to discuss your supply chain technology?"
+        text="Speak with our logistics engineers. We start by understanding your operation."
+        button="Get in touch"
+      />
 
-      <section className="section">
-        <div className="container split">
-          <div style={{ position: "sticky", top: 140 }}>
-            <div className="eyebrow">Benefits</div>
-            <SplitHeading text={s.benefitsTitle} className="h-lg" />
-          </div>
-          <div>
-            {s.benefits.map((b, i) => (
-              <Reveal key={b.t} delay={i * 0.05}>
-                <div style={{ padding: "36px 0", borderBottom: "1px solid var(--line)", display: "grid", gridTemplateColumns: "56px 1fr", gap: 12 }}>
-                  <span style={{ fontFamily: "var(--mono)", color: s.hue, fontSize: ".8rem" }}>0{i + 1}</span>
-                  <div>
-                    <h3 className="h-md" style={{ marginBottom: 10 }}>
-                      {b.t}
-                    </h3>
-                    <p className="lead">{b.d}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <CTA title={s.cta.title} text={s.cta.text} button={s.cta.button} />
-
+      {/* Next service navigation */}
       <section style={{ borderTop: "1px solid var(--line)" }}>
-        <Link href={`/${next.slug}`} className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "56px var(--pad)", gap: 24 }}>
+        <Link
+          href={`/${next.slug}`}
+          className="container"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "56px var(--pad)",
+            gap: 24,
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
           <div>
             <div className="eyebrow">Next service</div>
             <div className="h-lg" style={{ fontFamily: "var(--display)", fontWeight: 600, marginTop: 14 }}>

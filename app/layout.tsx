@@ -11,7 +11,7 @@ const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], displ
 export const metadata: Metadata = {
   title: { default: "Logistics Studio | Supply Chain Innovation & Solutions", template: "%s | Logistics Studio" },
   description:
-    "Logistics Studio provides digital strategy and solutions for the transportation & logistics industry: software, data science, dedicated teams and integrations.",
+    "Logistics-only technology partner for 14 years: complete EDI lifecycle across 10 areas, legacy modernization, dedicated engineering teams, and AI for 3PLs and carriers.",
 };
 export const viewport: Viewport = { themeColor: "#05080f", width: "device-width", initialScale: 1 };
 

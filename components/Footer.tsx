@@ -11,8 +11,8 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <Logo />
-            <p style={{ color: "rgba(255, 255, 255, 0.7)", marginTop: 20, maxWidth: 34 + "ch" }}>
-              Digital strategy and technology solutions for transportation &amp; logistics.
+            <p style={{ color: "rgba(255, 255, 255, 0.7)", marginTop: 20, maxWidth: "36ch", lineHeight: 1.5 }}>
+              Logistics-only technology partner: complete EDI lifecycle, legacy modernization, dedicated engineering teams, and applied AI.
             </p>
           </div>
           <div>
@@ -61,7 +61,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Logistics Studio. All rights reserved.</span>
-          <span>Innovate. Automate. Predict.</span>
+          <span>Logistics Only • 14 Years • 400 Engineers</span>
         </div>
       </div>
     </footer>

@@ -236,7 +236,7 @@ export default function Home() {
         </div>
       </section>
       <Pillars />
-      <ParallaxBand a="Strategy" b="Software" />
+      <ParallaxBand a="Software" b="Strategy" />
       <ServiceList />
       <Process />
       <Insights />

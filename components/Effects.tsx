@@ -35,21 +35,9 @@ export default function Effects() {
 
 
 
-    const down = (e: PointerEvent) => {
-      if (reduce) return;
-      const d = document.createElement("span");
-      d.className = "ripple";
-      d.style.left = e.clientX + "px";
-      d.style.top = e.clientY + "px";
-      document.body.appendChild(d);
-      setTimeout(() => d.remove(), 800);
-    };
-
     document.addEventListener("pointermove", move);
-    document.addEventListener("pointerdown", down);
     return () => {
       document.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerdown", down);
     };
   }, []);
   return null;

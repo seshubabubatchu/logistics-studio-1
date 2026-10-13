@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./Navbar";
 import Effects from "./Effects";
 
@@ -48,9 +48,6 @@ export default function Shell({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const lenis = useRef<Lenis | null>(null);
-  const { scrollYProgress } = useScroll();
-  const prog = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
-
   useEffect(() => {
     if (sessionStorage.getItem("ls-loaded")) setLoading(false);
   }, []);
@@ -91,7 +88,6 @@ export default function Shell({ children }: { children: ReactNode }) {
         )}
       </AnimatePresence>
       <Effects />
-      <motion.div className="progress" style={{ scaleX: prog }} />
       <Navbar />
       <motion.main
         key={pathname}

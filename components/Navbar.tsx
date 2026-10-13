@@ -32,13 +32,18 @@ export default function Navbar() {
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
+  const isSolid = solid && !open;
+
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
     setSolid(y > 40);
     setHidden(y > prev && y > 400 && !open);
   });
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setSolid(false);
+  }, [pathname]);
   useEffect(() => {
     document.body.classList.toggle("locked", open);
     return () => document.body.classList.remove("locked");
@@ -47,7 +52,7 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className={`nav${solid || open ? " solid" : ""}`}
+        className={`nav${isSolid ? " solid" : ""}`}
         animate={{ y: hidden ? "-110%" : 0 }}
         transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
         style={open ? { background: "transparent", backdropFilter: "none", borderColor: "transparent" } : undefined}

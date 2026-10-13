@@ -4,7 +4,6 @@ import "./globals.css";
 import Shell from "@/components/Shell";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
-import CustomCursor from "@/components/CustomCursor";
 
 const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], display: "swap" });
 const body = Inter({ variable: "--font-body", subsets: ["latin"], display: "swap" });
@@ -22,7 +21,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         <Loader />
-        <CustomCursor />
         <Shell>{children}</Shell>
         <Footer />
       </body>

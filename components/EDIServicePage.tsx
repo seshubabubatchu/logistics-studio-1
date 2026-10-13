@@ -711,17 +711,19 @@ export default function EDIServicePage() {
                       return (
                         <button
                           key={tab}
+                          type="button"
                           onClick={() => setStandardsTab(tab)}
                           style={{
-                            padding: "6px 14px",
+                            padding: "7px 16px",
                             borderRadius: 20,
-                            fontSize: "0.82rem",
-                            border: "1px solid var(--line)",
-                            background: isSelected ? "var(--brand-blue)" : "var(--bg-2)",
-                            color: isSelected ? "#ffffff" : "var(--fg)",
+                            fontSize: "0.84rem",
+                            border: isSelected ? "1px solid #081c54" : "1px solid var(--line)",
+                            background: isSelected ? "#081c54" : "var(--bg-2)",
+                            color: isSelected ? "#ffffff" : "#081c54",
                             cursor: "pointer",
-                            fontWeight: isSelected ? 600 : 400,
+                            fontWeight: isSelected ? 600 : 500,
                             transition: "all 0.15s ease",
+                            boxShadow: isSelected ? "0 2px 8px rgba(8, 28, 84, 0.2)" : "none",
                           }}
                         >
                           {tab}

@@ -25,10 +25,12 @@ const links = [
 
 const EDI_COL1_GROUPS = [
   {
+    id: "col1-plan",
     phase: "PLAN",
     items: [{ num: "01", title: "EDI Strategy & Assessment", anchor: "strategy-assessment" }],
   },
   {
+    id: "col1-connect",
     phase: "CONNECT",
     items: [
       { num: "02", title: "Trading Partner Onboarding", anchor: "onboarding" },
@@ -37,6 +39,7 @@ const EDI_COL1_GROUPS = [
     ],
   },
   {
+    id: "col1-prove",
     phase: "PROVE",
     items: [{ num: "03", title: "EDI Mapping & Translation", anchor: "mapping" }],
   },
@@ -44,10 +47,12 @@ const EDI_COL1_GROUPS = [
 
 const EDI_COL2_GROUPS = [
   {
+    id: "col2-prove",
     phase: "PROVE",
     items: [{ num: "06", title: "Testing, Certification & Compliance", anchor: "testing-compliance" }],
   },
   {
+    id: "col2-run",
     phase: "RUN",
     items: [
       { num: "07", title: "EDI Support & Monitoring", anchor: "support-monitoring" },
@@ -55,10 +60,12 @@ const EDI_COL2_GROUPS = [
     ],
   },
   {
+    id: "col2-evolve",
     phase: "EVOLVE",
     items: [{ num: "09", title: "EDI Migration & Modernization", anchor: "migration" }],
   },
   {
+    id: "col2-platforms",
     phase: "PLATFORMS & STANDARDS",
     items: [
       { num: "10", title: "Platforms We Work With", anchor: "platforms" },
@@ -67,7 +74,52 @@ const EDI_COL2_GROUPS = [
   },
 ];
 
-const ALL_EDI_GROUPS = [...EDI_COL1_GROUPS, ...EDI_COL2_GROUPS];
+// Unified distinct phases for mobile accordion without duplicate keys
+const ALL_EDI_GROUPS = [
+  {
+    id: "mob-plan",
+    phase: "PLAN",
+    items: [{ num: "01", title: "EDI Strategy & Assessment", anchor: "strategy-assessment" }],
+  },
+  {
+    id: "mob-connect",
+    phase: "CONNECT",
+    items: [
+      { num: "02", title: "Trading Partner Onboarding", anchor: "onboarding" },
+      { num: "04", title: "EDI Integration with ERP, WMS & TMS", anchor: "integration" },
+      { num: "05", title: "Communication & Connectivity", anchor: "connectivity" },
+    ],
+  },
+  {
+    id: "mob-prove",
+    phase: "PROVE",
+    items: [
+      { num: "03", title: "EDI Mapping & Translation", anchor: "mapping" },
+      { num: "06", title: "Testing, Certification & Compliance", anchor: "testing-compliance" },
+    ],
+  },
+  {
+    id: "mob-run",
+    phase: "RUN",
+    items: [
+      { num: "07", title: "EDI Support & Monitoring", anchor: "support-monitoring" },
+      { num: "08", title: "Managed EDI Services", anchor: "managed-edi" },
+    ],
+  },
+  {
+    id: "mob-evolve",
+    phase: "EVOLVE",
+    items: [{ num: "09", title: "EDI Migration & Modernization", anchor: "migration" }],
+  },
+  {
+    id: "mob-platforms",
+    phase: "PLATFORMS & STANDARDS",
+    items: [
+      { num: "10", title: "Platforms We Work With", anchor: "platforms" },
+      { num: "—", title: "Standards & Documents", anchor: "standards" },
+    ],
+  },
+];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -344,7 +396,7 @@ export default function Navbar() {
                             {/* Column 1: PLAN + CONNECT + PROVE (01–05) */}
                             <div className="flyout-col">
                               {EDI_COL1_GROUPS.map((grp) => (
-                                <div key={grp.phase} className="flyout-group">
+                                <div key={grp.id} className="flyout-group">
                                   <div className="flyout-phase-label">{grp.phase}</div>
                                   <div className="flyout-items">
                                     {grp.items.map((it) => (
@@ -367,7 +419,7 @@ export default function Navbar() {
                             {/* Column 2: PROVE + RUN + EVOLVE + PLATFORMS & STANDARDS (06–10) */}
                             <div className="flyout-col">
                               {EDI_COL2_GROUPS.map((grp) => (
-                                <div key={grp.phase} className="flyout-group">
+                                <div key={grp.id} className="flyout-group">
                                   <div className="flyout-phase-label">{grp.phase}</div>
                                   <div className="flyout-items">
                                     {grp.items.map((it) => (
@@ -395,7 +447,7 @@ export default function Navbar() {
                     {ediSubOpen && (
                       <div className="mobile-edi-accordion">
                         {ALL_EDI_GROUPS.map((grp) => (
-                          <div key={grp.phase} className="mobile-group">
+                          <div key={grp.id} className="mobile-group">
                             <div className="mobile-phase-label">{grp.phase}</div>
                             <div className="mobile-items">
                               {grp.items.map((it) => (

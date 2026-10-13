@@ -42,7 +42,7 @@ export default function Page() {
         </div>
       </section>
 
-      <ParallaxBand a="Logistics Only" b="400 Engineers" />
+      {/* <ParallaxBand a="Logistics Only" b="400 Engineers" /> */}
 
       <section className="section">
         <div className="container split">

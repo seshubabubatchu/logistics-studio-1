@@ -31,20 +31,8 @@ export const contact = {
 };
 
 export const pillars = [
-  {
-    t: "Logistics only, for 14 years",
-    d: "We don't split our attention across banking, retail and healthcare. Everything we've learned has come from logistics.",
-  },
-  {
-    t: "400 domain-fluent engineers",
-    d: "Our people understand freight, warehousing and EDI as well as they understand code. Productive from day one.",
-  },
-  {
-    t: "Whole EDI lifecycle under one roof",
-    d: "Planning, onboarding, mapping, integration, connectivity, testing, support, managed service and migration from one team.",
-  },
-  {
-    t: "Old and new together",
-    d: "We keep legacy systems running and build what replaces them, so you never have to choose between stability and progress.",
-  },
+  { t: "Strategy Solutions", d: "A unique discovery process produces a technology plan, then we design software that turns goals into reality." },
+  { t: "Development & Design", d: "From Android and iOS apps to full-fledged custom logistics software and every integration between. Built for the road, the office and the C-suite." },
+  { t: "Transformation & Automation", d: "Migrate legacy systems to the cloud, tackle your integrations checklist, and bring machine learning and AI into the tools your team uses daily." },
+  { t: "Agile & Supportive", d: "A team rooted in agile practice and a deep understanding of transportation and logistics. We identify problems fast and solve them together." },
 ];

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Compass, Code2, Workflow, Users } from "lucide-react";
-import { pillars, posts, services, howWeWorkSteps, docClosingCTA } from "@/lib/data";
+import { pillars, posts, services } from "@/lib/data";
 import HeroCanvas from "./HeroCanvas";
 import { Button, CTA, Marquee, ParallaxBand, Reveal, ScrollWords, SplitHeading, useMedia } from "./ui";
 
@@ -32,7 +32,7 @@ function Hero() {
         <HeroCanvas />
       </motion.div>
       <motion.div className="container" style={{ y, opacity: o }}>
-        <div className="eyebrow">Technology exclusively for logistics • 14 Years</div>
+        <div className="eyebrow">Technology for transportation &amp; logistics</div>
         <h1 style={{ marginTop: 28 }} className="h-xl">
           {HERO_LINES.map((line, i) => (
             <motion.span
@@ -53,7 +53,7 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.0, duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            For 14 years, Logistics Studio has built technology exclusively for logistics. 400 domain-fluent engineers covering the whole EDI lifecycle, legacy modernization, dedicated teams, and AI.
+            We build supply chain software, data science and integrations, from ERP to last-mile delivery, with the industry expertise logistics leaders can count on.
           </motion.p>
           <motion.div
             className="hero-actions"
@@ -89,18 +89,18 @@ function Pillars() {
       <div className="hscroll-sticky">
         <div className="container hscroll-head">
           <div>
-            <div className="eyebrow">Why Logistics Studio</div>
-            <SplitHeading text="Four reasons logistics leaders trust us" className="h-lg" />
+            <div className="eyebrow">What we do</div>
+            <SplitHeading text="Four ways we move you forward" className="h-lg" />
           </div>
           <p className="lead" style={{ maxWidth: "36ch" }}>
-            A collaborative technology partner for 3PLs, freight forwarders, carriers and warehouse operators.
+            A collaborative product development process for logistics leaders ready to begin their digital transformation journey.
           </p>
         </div>
         <motion.div className="hscroll-track" style={desktop ? { x } : undefined}>
           {pillars.map((p, i) => {
-            const Icon = icons[i % icons.length];
+            const Icon = icons[i];
             return (
-              <article key={p.t} className="pcard" style={{ ["--glow" as string]: glows[i % glows.length] }}>
+              <article key={p.t} className="pcard" style={{ ["--glow" as string]: glows[i] }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <span className="num">0{i + 1} / 04</span>
                   <span className="ic">
@@ -135,26 +135,7 @@ function ServiceList() {
             <Reveal key={s.slug} delay={i * 0.04} y={30}>
               <Link href={`/${s.slug}`} className="srow" style={{ ["--c" as string]: s.hue }}>
                 <span className="snum">{s.index}</span>
-                <span className="stitle" style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-                  {s.title}
-                  {s.slug === "edi-services" && (
-                    <span
-                      style={{
-                        fontFamily: "var(--mono)",
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        background: "rgba(242, 101, 47, 0.12)",
-                        color: "var(--brand-orange)",
-                        border: "1px solid rgba(242, 101, 47, 0.3)",
-                        padding: "2px 8px",
-                        borderRadius: 12,
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      10 areas
-                    </span>
-                  )}
-                </span>
+                <span className="stitle">{s.title}</span>
                 <span className="sdesc">{s.short}</span>
                 <span className="sarrow">
                   <ArrowUpRight size={20} />
@@ -168,6 +149,13 @@ function ServiceList() {
   );
 }
 
+const steps = [
+  { t: "Discover", d: "A discovery sprint takes a deep dive into what brought you to us. We leave you with a go-forward technology roadmap." },
+  { t: "Design", d: "Rapid prototypes and architecture that align your business goals with the right technology, security and scale included." },
+  { t: "Deliver", d: "Agile development from mobile apps to full custom logistics platforms and every integration in between." },
+  { t: "Evolve", d: "Dedicated teams, data science and continuous improvement keep systems sharp as your operation grows." },
+];
+
 function Process() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 70%", "end 60%"] });
@@ -179,21 +167,21 @@ function Process() {
           <SplitHeading text="A simple approach to complex problems" className="h-lg" />
           <Reveal delay={0.2}>
             <p className="lead" style={{ margin: "28px 0 36px" }}>
-              Most engagements follow the same five steps: from discovering your operation to long-term support and continuous improvement.
+              We assess your current technical state, identify present and foreseeable issues, and work alongside your team to align business goals with technology.
             </p>
-            <Button href="/services" ghost>
-              See how we work
+            <Button href="/strategy-and-development" ghost>
+              See the full approach
             </Button>
           </Reveal>
         </div>
         <div ref={ref} className="steps">
           <motion.div className="fill" style={{ scaleY: scrollYProgress }} />
-          {howWeWorkSteps.map((s, i) => (
-            <Reveal key={s.name}>
+          {steps.map((s, i) => (
+            <Reveal key={s.t}>
               <div className="step">
                 <span className="sn">STEP 0{i + 1}</span>
-                <h3>{s.name}</h3>
-                <p>{s.desc}</p>
+                <h3>{s.t}</h3>
+                <p>{s.d}</p>
               </div>
             </Reveal>
           ))}
@@ -242,25 +230,25 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Marquee items={["EDI 204/214/210", "AS2 & SFTP", "TMS & WMS", "BizTalk & Cleo", "IBM Sterling", "CData", "Legacy Modernization", "Dedicated Teams"]} />
+      <Marquee items={["ERP", "TMS", "WMS", "EDI & APIs", "Last-mile", "Machine Learning", "Cloud migration", "Mobile apps"]} />
       <section className="section">
         <div className="container stmt-wrap">
           <div className="eyebrow">Who we are</div>
           <ScrollWords
             className="statement wide"
-            text="For 14 years, Logistics Studio has built technology for one industry only: logistics. We work with 3PLs, freight forwarders, warehouse operators and last-mile carriers. Our 400-engineer team knows the code and knows how a load tender, an ASN or a freight invoice moves through a business."
+            text="At Logistics Studio we have the tools and talent the industry needs. Supply chain software, data analysis, staff augmentation and integrations from ERP to last-mile delivery, from a partner the supply chain can count on."
           />
         </div>
       </section>
       <Pillars />
-      <ParallaxBand a="EDI & Modernization" b="Logistics Fluency" />
+      <ParallaxBand a="Software" b="Strategy" />
       <ServiceList />
       <Process />
       <Insights />
       <CTA
-        title={docClosingCTA.title}
-        text={docClosingCTA.text}
-        button={docClosingCTA.button}
+        title="Free tech stack assessment"
+        text="Not sure where to start? We'll review your current logistics technology and show you where the biggest wins are."
+        button="Get started"
       />
     </>
   );

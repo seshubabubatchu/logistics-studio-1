@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { services } from "@/data/services";
 import { Button } from "./ui";
 
@@ -23,7 +23,7 @@ const links = [
   { href: "/resources", label: "Resources" },
 ];
 
-const EDI_MENU_GROUPS = [
+const EDI_LEFT_GROUPS = [
   {
     phase: "PLAN",
     items: [{ num: "01", title: "EDI Strategy & Assessment", anchor: "strategy-assessment" }],
@@ -36,6 +36,9 @@ const EDI_MENU_GROUPS = [
       { num: "05", title: "Communication & Connectivity", anchor: "connectivity" },
     ],
   },
+];
+
+const EDI_RIGHT_GROUPS = [
   {
     phase: "PROVE",
     items: [
@@ -63,11 +66,19 @@ const EDI_MENU_GROUPS = [
   },
 ];
 
+const ALL_EDI_GROUPS = [...EDI_LEFT_GROUPS, ...EDI_RIGHT_GROUPS];
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [ediSubOpen, setEdiSubOpen] = useState(false);
+  const [flyoutSide, setFlyoutSide] = useState<"left" | "right">("left");
+
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const ediWrapperRef = useRef<HTMLDivElement>(null);
+  const flyoutRef = useRef<HTMLDivElement>(null);
+
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
@@ -85,12 +96,90 @@ export default function Navbar() {
     setEdiSubOpen(false);
   }, [pathname]);
 
+  // Lock body scroll on menu open; restored on close
   useEffect(() => {
     document.body.classList.toggle("locked", open);
-    return () => document.body.classList.remove("locked");
+    return () => {
+      document.body.classList.remove("locked");
+    };
   }, [open]);
 
-  // Keyboard navigation (Esc closes menu or subpanel)
+  // Viewport position check: flip flyout left or right
+  const updateFlyoutPosition = () => {
+    if (typeof window === "undefined" || !ediWrapperRef.current) return;
+    const rect = ediWrapperRef.current.getBoundingClientRect();
+    if (window.innerWidth - rect.right >= 560) {
+      setFlyoutSide("right");
+    } else {
+      setFlyoutSide("left");
+    }
+  };
+
+  const handleEdiMouseEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    updateFlyoutPosition();
+    setEdiSubOpen(true);
+  };
+
+  const handleEdiMouseLeave = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setEdiSubOpen(false);
+    }, 150);
+  };
+
+  const handleOtherServiceMouseEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setEdiSubOpen(false);
+  };
+
+  const handleEdiFocus = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    updateFlyoutPosition();
+    setEdiSubOpen(true);
+  };
+
+  const handleEdiBlur = (e: React.FocusEvent) => {
+    if (!ediWrapperRef.current?.contains(e.relatedTarget as Node)) {
+      setEdiSubOpen(false);
+    }
+  };
+
+  // Keyboard navigation inside the flyout panel
+  const handleFlyoutKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setEdiSubOpen(false);
+      ediWrapperRef.current?.querySelector("button")?.focus();
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const focusable = flyoutRef.current?.querySelectorAll<HTMLAnchorElement>("a");
+      if (!focusable || focusable.length === 0) return;
+      const list = Array.from(focusable);
+      const currentIndex = list.indexOf(document.activeElement as HTMLAnchorElement);
+      let nextIndex = 0;
+      if (e.key === "ArrowDown") {
+        nextIndex = currentIndex < list.length - 1 ? currentIndex + 1 : 0;
+      } else {
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : list.length - 1;
+      }
+      list[nextIndex]?.focus();
+    }
+  };
+
+  // Global escape key handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -106,9 +195,16 @@ export default function Navbar() {
   }, [open, ediSubOpen]);
 
   const closeMenu = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setOpen(false);
     setEdiSubOpen(false);
   };
+
+  const otherServices = services.slice(1);
+  const ediService = services[0];
 
   return (
     <>
@@ -147,8 +243,9 @@ export default function Navbar() {
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
             data-lenis-prevent
           >
-            <div className="menu-grid" style={{ gridTemplateColumns: ediSubOpen ? "1fr 1fr 1fr" : undefined }}>
-              {/* Left Column: Main Pages */}
+            {/* Always exactly 2 columns: left big links | right "WHAT WE DO" */}
+            <div className="menu-grid">
+              {/* Left Column: Big Nav Links (never wraps, 5 items fit exactly in 100dvh) */}
               <div className="menu-main">
                 {[
                   ["/", "Home"],
@@ -157,7 +254,12 @@ export default function Navbar() {
                   ["/resources", "Resources"],
                   ["/contact", "Get in touch"],
                 ].map(([h, l], i) => (
-                  <motion.div key={h} initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.25 + i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+                  <motion.div
+                    key={h}
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 + i * 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
                     <Link href={h} onClick={closeMenu}>
                       <sup>0{i + 1}</sup>
                       {l}
@@ -166,215 +268,181 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Middle/Right Column: WHAT WE DO (6 Services) */}
-              <motion.div className="menu-side" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+              {/* Right Column: Fixed Width "WHAT WE DO" */}
+              <motion.div className="menu-side" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
                 <h4>What we do</h4>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  {services.map((s) => {
-                    const isEdi = s.slug === "edi-services";
-                    return (
-                      <div key={s.slug} style={{ borderBottom: "1px solid var(--line)" }}>
-                        <div
-                          onMouseEnter={() => isEdi && setEdiSubOpen(true)}
+                <div className="menu-services-list">
+                  {/* EDI Services Wrapper (row + absolute overlay flyout in one wrapper) */}
+                  <div
+                    ref={ediWrapperRef}
+                    className="edi-menu-wrapper"
+                    onMouseEnter={handleEdiMouseEnter}
+                    onMouseLeave={handleEdiMouseLeave}
+                    onFocus={handleEdiFocus}
+                    onBlur={handleEdiBlur}
+                  >
+                    <div className={`menu-service-item edi-row${ediSubOpen ? " is-active" : ""}`}>
+                      <Link
+                        href={`/${ediService.slug}`}
+                        onClick={closeMenu}
+                        className="service-title-link"
+                      >
+                        <span>{ediService.title}</span>
+                        <span className="edi-badge">10 areas</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateFlyoutPosition();
+                          setEdiSubOpen(!ediSubOpen);
+                        }}
+                        aria-expanded={ediSubOpen}
+                        aria-controls="edi-subpanel-content"
+                        aria-label="Toggle EDI sub-areas"
+                        className="edi-chevron-btn"
+                      >
+                        <span className="service-idx">01</span>
+                        <ChevronDown
+                          size={16}
+                          className="chevron-icon"
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "14px 0",
-                            gap: 12,
+                            transform: ediSubOpen ? "rotate(180deg)" : "rotate(0deg)",
+                            transition: "transform 0.2s ease",
                           }}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Desktop Flyout Overlay (Absolute, out of document flow, overlays without pushing) */}
+                    <AnimatePresence>
+                      {ediSubOpen && (
+                        <motion.div
+                          ref={flyoutRef}
+                          id="edi-subpanel-content"
+                          className={`desktop-edi-flyout side-${flyoutSide}`}
+                          initial={{
+                            opacity: 0,
+                            x: flyoutSide === "left" ? 8 : -8,
+                            scale: 0.98,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            x: 0,
+                            scale: 1,
+                          }}
+                          exit={{
+                            opacity: 0,
+                            x: flyoutSide === "left" ? 6 : -6,
+                            scale: 0.98,
+                          }}
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                          onKeyDown={handleFlyoutKeyDown}
+                          role="region"
+                          aria-label="EDI Sub-Areas (01–10)"
                         >
-                          <Link
-                            href={`/${s.slug}`}
-                            onClick={closeMenu}
-                            style={{
-                              border: "none",
-                              padding: 0,
-                              fontSize: "1.1rem",
-                              fontWeight: isEdi ? 600 : 400,
-                              color: isEdi && ediSubOpen ? "var(--brand-orange)" : "inherit",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 10,
-                              flex: 1,
-                            }}
-                          >
-                            <span>{s.title}</span>
-                            {isEdi && (
-                              <span
-                                style={{
-                                  fontFamily: "var(--mono)",
-                                  fontSize: "0.68rem",
-                                  fontWeight: 600,
-                                  background: "rgba(242, 101, 47, 0.12)",
-                                  color: "var(--brand-orange)",
-                                  border: "1px solid rgba(242, 101, 47, 0.3)",
-                                  padding: "2px 8px",
-                                  borderRadius: 12,
-                                  letterSpacing: "0.04em",
-                                }}
-                              >
-                                10 areas
-                              </span>
-                            )}
-                          </Link>
-
-                          {isEdi ? (
-                            <button
-                              onClick={() => setEdiSubOpen(!ediSubOpen)}
-                              aria-expanded={ediSubOpen}
-                              aria-label="Toggle 10 EDI areas subpanel"
-                              style={{
-                                background: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                color: ediSubOpen ? "var(--brand-orange)" : "var(--muted)",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "4px 8px",
-                                borderRadius: 6,
-                              }}
-                            >
-                              <span style={{ fontFamily: "var(--mono)", fontSize: "0.85rem" }}>01</span>
-                              <ChevronDown
-                                size={16}
-                                style={{
-                                  transform: ediSubOpen ? "rotate(180deg)" : "rotate(0deg)",
-                                  transition: "transform 0.2s ease",
-                                }}
-                              />
-                            </button>
-                          ) : (
-                            <span style={{ fontFamily: "var(--mono)", fontSize: "0.85rem", color: "var(--muted)" }}>
-                              {s.index}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Mobile Accordion Expansion */}
-                        {isEdi && ediSubOpen && (
-                          <div className="mobile-edi-accordion" style={{ padding: "10px 0 16px 12px", display: "flex", flexDirection: "column", gap: 14 }}>
-                            {EDI_MENU_GROUPS.map((grp) => (
-                              <div key={grp.phase}>
-                                <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--brand-orange)", letterSpacing: "0.12em", fontWeight: 600, marginBottom: 4 }}>
-                                  {grp.phase}
-                                </div>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                  {grp.items.map((it) => (
-                                    <Link
-                                      key={it.anchor}
-                                      href={`/edi-services#${it.anchor}`}
-                                      onClick={closeMenu}
-                                      style={{
-                                        border: "none",
-                                        padding: "4px 0",
-                                        fontSize: "0.88rem",
-                                        color: "var(--fg)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 8,
-                                      }}
-                                    >
-                                      <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", opacity: 0.6 }}>{it.num}</span>
-                                      <span>{it.title}</span>
-                                    </Link>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
+                          {/* Header */}
+                          <div className="flyout-header">
+                            <span className="flyout-badge">EDI SUB-AREAS (01–10)</span>
+                            <Link href="/edi-services" onClick={closeMenu} className="flyout-all-link">
+                              All EDI →
+                            </Link>
                           </div>
-                        )}
+
+                          {/* 2-Column Compact Grid */}
+                          <div className="flyout-columns">
+                            {/* Left Column: PLAN + CONNECT */}
+                            <div className="flyout-col">
+                              {EDI_LEFT_GROUPS.map((grp) => (
+                                <div key={grp.phase} className="flyout-group">
+                                  <div className="flyout-phase-label">{grp.phase}</div>
+                                  <div className="flyout-items">
+                                    {grp.items.map((it) => (
+                                      <Link
+                                        key={it.anchor}
+                                        href={`/edi-services#${it.anchor}`}
+                                        onClick={closeMenu}
+                                        className="flyout-item"
+                                      >
+                                        <span className="item-num">{it.num}</span>
+                                        <span className="item-title">{it.title}</span>
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Right Column: PROVE + RUN + EVOLVE + PLATFORMS & STANDARDS */}
+                            <div className="flyout-col">
+                              {EDI_RIGHT_GROUPS.map((grp) => (
+                                <div key={grp.phase} className="flyout-group">
+                                  <div className="flyout-phase-label">{grp.phase}</div>
+                                  <div className="flyout-items">
+                                    {grp.items.map((it) => (
+                                      <Link
+                                        key={it.anchor}
+                                        href={`/edi-services#${it.anchor}`}
+                                        onClick={closeMenu}
+                                        className="flyout-item"
+                                      >
+                                        <span className="item-num">{it.num}</span>
+                                        <span className="item-title">{it.title}</span>
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Mobile Inline Accordion (<1024px only) */}
+                    {ediSubOpen && (
+                      <div className="mobile-edi-accordion">
+                        {ALL_EDI_GROUPS.map((grp) => (
+                          <div key={grp.phase} className="mobile-group">
+                            <div className="mobile-phase-label">{grp.phase}</div>
+                            <div className="mobile-items">
+                              {grp.items.map((it) => (
+                                <Link
+                                  key={it.anchor}
+                                  href={`/edi-services#${it.anchor}`}
+                                  onClick={closeMenu}
+                                  className="mobile-item"
+                                >
+                                  <span className="item-num">{it.num}</span>
+                                  <span>{it.title}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    );
-                  })}
+                    )}
+                  </div>
+
+                  {/* The other 5 service rows (hovering any of them closes the EDI panel immediately) */}
+                  {otherServices.map((s) => (
+                    <div
+                      key={s.slug}
+                      className="menu-service-item other-service"
+                      onMouseEnter={handleOtherServiceMouseEnter}
+                    >
+                      <Link href={`/${s.slug}`} onClick={closeMenu} className="service-title-link">
+                        <span>{s.title}</span>
+                      </Link>
+                      <span className="service-idx">{s.index}</span>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
-
-              {/* Desktop Sub-Panel: 10 EDI Areas Column */}
-              <AnimatePresence>
-                {ediSubOpen && (
-                  <motion.div
-                    className="desktop-edi-subpanel"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 15 }}
-                    transition={{ duration: 0.3 }}
-                    style={{
-                      background: "var(--bg-card)",
-                      border: "1px solid var(--line)",
-                      borderRadius: 16,
-                      padding: "24px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 16,
-                      maxHeight: "75vh",
-                      overflowY: "auto",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--line)", paddingBottom: 10 }}>
-                      <span style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", color: "var(--brand-orange)", letterSpacing: "0.12em", fontWeight: 700, textTransform: "uppercase" }}>
-                        EDI Sub-Areas (01–10)
-                      </span>
-                      <Link
-                        href="/edi-services"
-                        onClick={closeMenu}
-                        style={{
-                          fontSize: "0.78rem",
-                          color: "var(--brand-blue)",
-                          fontWeight: 600,
-                          textDecoration: "none",
-                          border: "none",
-                          padding: 0,
-                        }}
-                      >
-                        All EDI →
-                      </Link>
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                      {EDI_MENU_GROUPS.map((grp) => (
-                        <div key={grp.phase}>
-                          <div style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--brand-orange)", letterSpacing: "0.12em", fontWeight: 600, marginBottom: 6 }}>
-                            {grp.phase}
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            {grp.items.map((it) => (
-                              <Link
-                                key={it.anchor}
-                                href={`/edi-services#${it.anchor}`}
-                                onClick={closeMenu}
-                                style={{
-                                  border: "none",
-                                  padding: "5px 8px",
-                                  borderRadius: 6,
-                                  fontSize: "0.85rem",
-                                  color: "var(--fg)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  transition: "background 0.15s ease, color 0.15s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = "rgba(242, 101, 47, 0.08)";
-                                  e.currentTarget.style.color = "var(--brand-orange)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = "transparent";
-                                  e.currentTarget.style.color = "var(--fg)";
-                                }}
-                              >
-                                <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", opacity: 0.6 }}>{it.num}</span>
-                                <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{it.title}</span>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
 
             <div className="menu-foot">

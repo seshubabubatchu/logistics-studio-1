@@ -39,6 +39,10 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: var(--body);
   color: var(--text);
@@ -363,34 +367,47 @@ h4 {
 .menu {
   position: fixed;
   inset: 0;
+  height: 100dvh;
   z-index: 700;
   background: var(--bg-2);
-  padding: 120px var(--pad) 40px;
-  overflow-y: auto;
+  padding: clamp(70px, 11vh, 100px) var(--pad) clamp(20px, 3.5vh, 36px);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 40px;
+  gap: 20px;
 }
 
 .menu-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1fr 380px;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+.menu-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
 }
 
 .menu-main a {
   display: block;
   font-family: var(--display);
-  font-size: clamp(2.6rem, 7.5vw, 6.5rem);
+  font-size: clamp(2.5rem, 8vh, 5.8rem);
   font-weight: 600;
   letter-spacing: -0.04em;
-  line-height: 1.02;
+  line-height: 1;
+  white-space: nowrap;
   transition: color 0.3s, transform 0.5s var(--ease-out);
 }
 
 .menu-main a:hover {
-  color: var(--lime);
+  color: var(--brand-orange);
   transform: translateX(14px);
 }
 
@@ -405,6 +422,14 @@ h4 {
   top: 0.9em;
 }
 
+.menu-side {
+  width: 380px;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
 .menu-side h4 {
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -412,21 +437,236 @@ h4 {
   text-transform: uppercase;
   color: var(--muted);
   font-weight: 400;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
-.menu-side a {
+.menu-services-list {
   display: flex;
-  justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 1.1rem;
-  transition: padding 0.4s var(--ease-out), color 0.3s;
+  flex-direction: column;
 }
 
-.menu-side a:hover {
-  padding-left: 12px;
-  color: var(--lime);
+.menu-service-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.05rem;
+  gap: 12px;
+}
+
+.menu-service-item .service-title-link {
+  border: none;
+  padding: 0;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  font-size: 1.05rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.menu-service-item .service-title-link:hover {
+  color: var(--brand-orange);
+  transform: translateX(4px);
+}
+
+.menu-service-item.is-active .service-title-link {
+  color: var(--brand-orange);
+}
+
+.menu-service-item .service-idx {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.edi-menu-wrapper {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+
+.edi-menu-wrapper .edi-row {
+  border-bottom: none;
+}
+
+.edi-badge {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: rgba(242, 101, 47, 0.12);
+  color: var(--brand-orange);
+  border: 1px solid rgba(242, 101, 47, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.edi-chevron-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.edi-chevron-btn:hover,
+.edi-row.is-active .edi-chevron-btn {
+  color: var(--brand-orange);
+}
+
+/* ───────── Desktop Flyout Overlay (Absolute, Out of Flow) ───────── */
+.desktop-edi-flyout {
+  position: absolute;
+  top: 0;
+  width: 540px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
+  z-index: 100;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+/* Transparent Hover Bridge */
+.desktop-edi-flyout::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  bottom: -12px;
+  left: -24px;
+  right: -24px;
+  pointer-events: auto;
+  z-index: -1;
+}
+
+.desktop-edi-flyout.side-left {
+  right: calc(100% + 18px);
+  left: auto;
+}
+
+.desktop-edi-flyout.side-right {
+  left: calc(100% + 18px);
+  right: auto;
+}
+
+.flyout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.flyout-badge {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--brand-orange);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.flyout-all-link {
+  font-size: 0.8rem;
+  color: var(--brand-blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.flyout-all-link:hover {
+  color: var(--brand-orange);
+}
+
+.flyout-columns {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  gap: 16px;
+}
+
+.flyout-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flyout-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flyout-phase-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--brand-orange);
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.flyout-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flyout-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  height: 34px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--fg);
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+  white-space: nowrap;
+}
+
+.flyout-item:hover,
+.flyout-item:focus-visible {
+  background: rgba(242, 101, 47, 0.08);
+  color: var(--brand-orange);
+  outline: none;
+}
+
+.flyout-item:focus-visible {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 1px;
+}
+
+.flyout-item .item-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.flyout-item:hover .item-num {
+  color: var(--brand-orange);
+}
+
+.flyout-item .item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu-foot {
@@ -436,6 +676,8 @@ h4 {
   gap: 16px;
   color: var(--muted);
   font-size: 0.9rem;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
 }
 
 @media (max-width: 960px) {
@@ -1759,14 +2001,96 @@ h4 {
   }
 }
 
-@media (min-width: 961px) {
+@media (min-width: 1024px) {
   .mobile-edi-accordion {
     display: none !important;
   }
 }
 
-@media (max-width: 960px) {
-  .desktop-edi-subpanel {
+@media (max-width: 1023px) {
+  .desktop-edi-flyout {
     display: none !important;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu {
+    overflow-y: auto !important;
+    justify-content: flex-start;
+    gap: 36px;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+    flex: none;
+  }
+
+  .menu-side {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .menu-main a {
+    font-size: clamp(2rem, 6vw, 3.5rem) !important;
+    white-space: normal !important;
+  }
+
+  .mobile-edi-accordion {
+    padding: 10px 0 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mobile-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-phase-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--brand-orange);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .mobile-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-item {
+    border: none;
+    padding: 4px 0;
+    font-size: 0.88rem;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .mobile-item .item-num {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-edi-flyout,
+  .menu-main a,
+  .menu-service-item,
+  .service-title-link,
+  .flyout-item {
+    transition: none !important;
+    animation: none !important;
   }
 }

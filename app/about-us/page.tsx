@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CTA, PageHero, Parallax, ParallaxBand, Reveal, ScrollWords, SplitHeading } from "@/components/ui";
 import { Visual } from "@/components/ServicePage";
+import CeoSection from "@/components/CeoSection";
 import { whyLogisticsStudio, docClosingCTA } from "@/data/services";
 
 export const metadata: Metadata = {
@@ -63,6 +64,9 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      {/* CEO & Leadership Values Section */}
+      <CeoSection />
 
       <section className="section" style={{ background: "var(--bg-2)" }}>
         <div className="container">

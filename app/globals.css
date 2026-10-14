@@ -2187,3 +2187,400 @@ h4 {
     animation: none !important;
   }
 }
+
+/* ───────── CEO & Values Section ───────── */
+.ceo-section {
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, var(--bg-2) 100%);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.ceo-header {
+  max-width: 860px;
+  margin-bottom: clamp(40px, 6vw, 70px);
+}
+
+.ceo-lead {
+  margin-top: 24px;
+}
+
+.ceo-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 440px) 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+}
+
+/* Left: CEO Profile Card */
+.ceo-profile-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(8, 28, 84, 0.12);
+  background: #ffffff;
+  box-shadow: 0 20px 48px -12px rgba(8, 28, 84, 0.08);
+}
+
+.ceo-card-glow {
+  position: absolute;
+  top: -20%;
+  left: 20%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(19, 104, 246, 0.2), transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ceo-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.08;
+  overflow: hidden;
+  background: #081c54;
+}
+
+.ceo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceo-profile-card:hover .ceo-image {
+  transform: scale(1.04);
+}
+
+.ceo-floating-pill {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(8, 28, 84, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ceo-pulsing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f2652f;
+  box-shadow: 0 0 10px #f2652f;
+  animation: ceo-pulse 2s infinite ease-in-out;
+}
+
+@keyframes ceo-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+}
+
+.ceo-image-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 28, 84, 0.1) 0%,
+    rgba(8, 28, 84, 0.2) 50%,
+    rgba(8, 28, 84, 0.88) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ceo-image-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  z-index: 3;
+}
+
+.ceo-name {
+  color: #ffffff;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.ceo-title {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ceo-card-body {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ceo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ceo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  font-size: 0.78rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--brand-blue);
+}
+
+.ceo-tag-icon {
+  color: var(--brand-orange);
+}
+
+.ceo-quote-box {
+  position: relative;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(19, 104, 246, 0.04), rgba(242, 101, 47, 0.04));
+  border: 1px solid rgba(8, 28, 84, 0.08);
+}
+
+.ceo-quote-icon {
+  color: var(--brand-orange);
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.ceo-quote-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+}
+
+.ceo-quote-author {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.ceo-signature {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--brand-blue);
+  letter-spacing: 0.06em;
+}
+
+.ceo-presence {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.presence-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.presence-icon {
+  color: var(--brand-blue);
+  flex-shrink: 0;
+}
+
+.presence-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+.presence-item strong {
+  font-size: 0.8rem;
+  color: var(--brand-blue);
+  line-height: 1.2;
+}
+
+.presence-item span {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.presence-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--line);
+}
+
+/* Right: Values Section */
+.ceo-values-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ceo-values-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ceo-values-title {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  color: var(--brand-blue);
+  line-height: 1.05;
+}
+
+.ceo-values-intro {
+  font-size: clamp(1.05rem, 1.4vw, 1.22rem);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 65ch;
+}
+
+.ceo-values-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.ceo-value-item {
+  display: flex;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 18px -4px rgba(8, 28, 84, 0.04);
+}
+
+.ceo-value-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ceo-value-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ceo-value-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-blue);
+  line-height: 1.2;
+}
+
+.ceo-value-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ceo-bottom-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(8, 28, 84, 0.04), rgba(19, 104, 246, 0.08));
+  border: 1px solid rgba(8, 28, 84, 0.08);
+}
+
+.callout-content h4 {
+  font-size: 1.1rem;
+  color: var(--brand-blue);
+  margin-bottom: 4px;
+}
+
+.callout-content p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+.ceo-connect-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--brand-blue);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceo-connect-btn:hover {
+  background: var(--brand-orange);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(242, 101, 47, 0.4);
+}
+
+@media (max-width: 1080px) {
+  .ceo-layout {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .ceo-profile-card {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .ceo-values-grid {
+    grid-template-columns: 1fr;
+  }
+  .ceo-bottom-callout {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ceo-connect-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

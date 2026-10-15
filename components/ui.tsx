@@ -232,14 +232,18 @@ export function CTA({
   text,
   button,
   href = "/contact",
+  className,
+  style,
 }: {
   title: string;
   text: string;
   button: string;
   href?: string;
+  className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
-    <section className="section" style={{ paddingTop: 0 }}>
+    <section className={`section ${className ?? ""}`.trim()} style={{ paddingTop: 0, ...style }}>
       <div className="container">
         <Reveal>
           <div className="cta">

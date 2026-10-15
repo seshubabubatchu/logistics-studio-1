@@ -197,7 +197,14 @@ export default function ServicePage({ s }: { s: ServiceItem }) {
 
       {/* Capabilities tags */}
       {s.capabilities && (
-        <section className="section" style={{ background: "var(--bg-2)", padding: "48px 0" }}>
+        <section
+          className="section"
+          style={{
+            background: "var(--bg-2)",
+            padding: "48px 0",
+            marginBottom: "clamp(64px, 8vw, 96px)",
+          }}
+        >
           <div className="container">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
               <div>

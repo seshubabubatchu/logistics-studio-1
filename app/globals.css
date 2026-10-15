@@ -857,7 +857,7 @@ h4 {
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
-  padding: 140px 0 60px;
+  padding: clamp(100px, 9vw, 136px) 0 60px;
   overflow: hidden;
 }
 
@@ -1492,7 +1492,12 @@ h4 {
 /* ───────── page hero ───────── */
 .phero {
   position: relative;
-  padding: clamp(150px, 20vw, 260px) 0 clamp(60px, 8vw, 120px);
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: clamp(100px, 9vw, 136px) 0 clamp(60px, 8vw, 120px);
   overflow: hidden;
 }
 
@@ -2056,7 +2061,7 @@ h4 {
     -webkit-overflow-scrolling: touch;
   }
 
-  .edi-mini-nav-sticky > div:first-child {
+  .edi-mini-nav-sticky>div:first-child {
     display: none !important;
   }
 
@@ -2066,18 +2071,18 @@ h4 {
     gap: 12px !important;
   }
 
-  .edi-mini-nav-sticky nav > div {
+  .edi-mini-nav-sticky nav>div {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     gap: 6px !important;
   }
 
-  .edi-mini-nav-sticky nav > div > div:first-child {
+  .edi-mini-nav-sticky nav>div>div:first-child {
     display: none !important;
   }
 
-  .edi-mini-nav-sticky nav > div > div:last-child {
+  .edi-mini-nav-sticky nav>div>div:last-child {
     display: flex !important;
     flex-direction: row !important;
     gap: 6px !important;
@@ -2178,6 +2183,7 @@ h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .desktop-edi-flyout,
   .menu-main a,
   .menu-service-item,
@@ -2289,10 +2295,13 @@ h4 {
 }
 
 @keyframes ceo-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.4);
     opacity: 0.6;
@@ -2302,12 +2311,10 @@ h4 {
 .ceo-image-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(8, 28, 84, 0.1) 0%,
-    rgba(8, 28, 84, 0.2) 50%,
-    rgba(8, 28, 84, 0.88) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(8, 28, 84, 0.1) 0%,
+      rgba(8, 28, 84, 0.2) 50%,
+      rgba(8, 28, 84, 0.88) 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -2565,6 +2572,7 @@ h4 {
     grid-template-columns: 1fr;
     gap: 48px;
   }
+
   .ceo-profile-card {
     max-width: 500px;
     margin: 0 auto;
@@ -2575,10 +2583,12 @@ h4 {
   .ceo-values-grid {
     grid-template-columns: 1fr;
   }
+
   .ceo-bottom-callout {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .ceo-connect-btn {
     width: 100%;
     justify-content: center;

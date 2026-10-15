@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Sparkles, Wrench } from "lucide-react";
 import { services, type ServiceItem } from "@/data/services";
 import { CTA, PageHero, Reveal, SplitHeading } from "./ui";
+import VisualStory from "./VisualStory";
 
 export function Visual({ hue, label }: { hue: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -194,6 +195,9 @@ export default function ServicePage({ s }: { s: ServiceItem }) {
           </div>
         </div>
       </section>
+
+      {/* Service-Specific 300vh Scroll-Driven Visual Story */}
+      <VisualStory slug={s.slug} title={s.title} kicker={s.kicker} hue={s.hue} />
 
       {/* Capabilities tags */}
       {s.capabilities && (
